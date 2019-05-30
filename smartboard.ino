@@ -183,7 +183,10 @@ void loop() {
 
 void update_speed() {
   if (rotations > 1) {
+    /* Dividing dist by two because reed switch was getting triggered twice each rotation.
+    If you choose to go with a Hall sensor you would want to get rid of that division. */
     dist = CIRCUMF * rotations / 2;
+    //dist = CIRCUMF * rotations;
     speedKMH = dist * 3.6 / (WAIT / 1000);
   } else {
     speedKMH = 0;
