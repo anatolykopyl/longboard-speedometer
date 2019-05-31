@@ -18,7 +18,7 @@ int DOT = 15;
 
 int SENS = 10;
 
-int WAIT = 500; //Time between updates
+int WAIT = 1000; //Time between updates
 double CIRCUMF = 3.14 * 7; //Circumference of your wheel
 int dist = 0;
 int speedKMH = 0;
