@@ -18,9 +18,9 @@ int DOT = 15;
 
 int SENS = 10;
 
-int WAIT = 1000; //Time between updates
+double WAIT = 500; //Time between updates
 double CIRCUMF = 3.14 * 7; //Circumference of your wheel
-int dist = 0;
+double dist = 0;
 int speedKMH = 0;
 
 bool got_signal = false;
@@ -182,16 +182,8 @@ void loop() {
 }
 
 void update_speed() {
-  if (rotations > 1) {
-    /* Dividing dist by two because reed switch was getting triggered twice each rotation.
-    If you choose to go with a Hall sensor you would want to get rid of that division. */
-    dist = CIRCUMF * rotations / 2;
-    //dist = CIRCUMF * rotations;
-    speedKMH = dist * 3.6 / (WAIT / 1000);
-  } else {
-    speedKMH = 0;
-  }
+  dist = CIRCUMF * rotations / 2;
+  speedKMH = dist * 3.6 / (WAIT / 1000);
 
-  got_signal = false;
   rotations = 0;
 }
