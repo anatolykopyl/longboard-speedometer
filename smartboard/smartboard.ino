@@ -7,7 +7,7 @@ Timer t;
 
 int D1, D2, D3, D4;
 int A, B, C, D, E, F, G, DOT;
-int SENS = 10;
+int SENS;
 
 double WAIT = 500; //Time between updates
 double CIRCUMF = 3.14 * 7; //Circumference of your wheel
