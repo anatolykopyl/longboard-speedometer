@@ -1,41 +1,13 @@
 #include "Timer.h"
+
+#define DOUBLE_TRIGGER false
+#define MODEL "nano"
+
 Timer t;
 
-//Pinout for a pro micro, check schematic
-/*
-int D1 = 2;
-int D2 = 5;
-int D3 = 6;
-int D4 = 12;
-
-int A = 3;
-int B = 7;
-int C = 14;
-int D = 16;
-int E = 17;
-int F = 4;
-int G = 13;
-int DOT = 15;
-
+int D1, D2, D3, D4;
+int A, B, C, D, E, F, G, DOT;
 int SENS = 10;
-*/
-
-//Pinout for a nano
-int D1 = 4;
-int D2 = 7;
-int D3 = 8;
-int D4 = 14;
-
-int A = 5;
-int B = 9;
-int C = 16;
-int D = 18;
-int E = 19;
-int F = 6;
-int G = 15;
-int DOT = 17;
-
-int SENS = 12;
 
 double WAIT = 500; //Time between updates
 double CIRCUMF = 3.14 * 7; //Circumference of your wheel
@@ -52,13 +24,13 @@ void draw_char(char c, int digit) {
   digitalWrite(D4, LOW);
   digitalWrite(digit, HIGH);
 
-  if (digit == D4) {
+  if (digit == D3) {
     digitalWrite(DOT, LOW);
   } else {
     digitalWrite(DOT, HIGH);
   }
-  
-  switch(c) {
+
+  switch (c) {
     case '1':
       digitalWrite(A, HIGH);
       digitalWrite(B, LOW);
@@ -163,11 +135,45 @@ void draw_char(char c, int digit) {
 }
 
 void setup() {
+  if (MODEL == "pro micro") {
+    D1 = 2;
+    D2 = 5;
+    D3 = 6;
+    D4 = 12;
+  
+    A = 3;
+    B = 7;
+    C = 14;
+    D = 16;
+    E = 17;
+    F = 4;
+    G = 13;
+    DOT = 15;
+  
+    SENS = 10;
+  } else if (MODEL == "nano") {
+    D1 = 4;
+    D2 = 7;
+    D3 = 8;
+    D4 = 14;
+  
+    A = 5;
+    B = 9;
+    C = 16;
+    D = 18;
+    E = 19;
+    F = 6;
+    G = 15;
+    DOT = 17;
+  
+    SENS = 12;
+  }
+  
   pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
   pinMode(D3, OUTPUT);
   pinMode(D4, OUTPUT);
-  
+
   pinMode(A, OUTPUT);
   pinMode(B, OUTPUT);
   pinMode(C, OUTPUT);
@@ -194,18 +200,24 @@ void loop() {
     got_signal = false;
   }
 
-  draw_char(speedKMH/1000%10 + '0', D1);
-  draw_char(speedKMH/100%10 + '0', D2);
-  draw_char(speedKMH/10%10 + '0', D3);
-  draw_char(speedKMH%10 + '0', D4);
+  draw_char(speedKMH / 1000 % 10 + '0', D1);
+  draw_char(speedKMH / 100 % 10 + '0', D2);
+  draw_char(speedKMH / 10 % 10 + '0', D3);
+  draw_char(speedKMH % 10 + '0', D4);
 }
 
 void update_speed() {
-  /* 
-   *  Dividing by two because reed switch gets triggered twice a rotation
-   *  You probably won't need that if you opt for a hall sensor
-   */
-  dist = CIRCUMF * rotations / 2;
+  /*
+      Dividing by two because reed switch gets triggered twice a rotation
+      You probably won't need that if you opt for a hall sensor
+  */
+
+  if (DOUBLE_TRIGGER) {
+    dist = CIRCUMF * rotations / 2;
+  } else {
+    dist = CIRCUMF * rotations;
+  }
+
   speedKMH = dist * 3.6 / (WAIT / 1000);
 
   rotations = 0;
